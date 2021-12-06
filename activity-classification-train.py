@@ -57,7 +57,7 @@ n_samples = 1000
 time_elapsed_seconds = (data[n_samples,0] - data[0,0]) / 1000
 sampling_rate = n_samples / time_elapsed_seconds
 
-class_names = ["legs moving", "minimal movement", "posture change", "sitting up" ] #...
+class_names = ["legs moving", "minimal movement", "posture change"] #...
 
 print("Extracting features and labels for window size {} and step size {}...".format(window_size, step_size))
 sys.stdout.flush()
@@ -117,7 +117,7 @@ for train_index, test_index in cv.split(X):
     predicted_labels = tree.predict(test_data)
     conf = confusion_matrix(test_labels, predicted_labels)
     print(conf)
-    accuracy = (conf[0][0] + conf[1][1] + conf[2][2] + conf[3][3]) / np.sum(conf)
+    accuracy = (conf[0][0] + conf[1][1] + conf[2][2] ) / np.sum(conf)
     sum_acc += accuracy
     print(f'{accuracy = }')
 
@@ -145,13 +145,7 @@ for train_index, test_index in cv.split(X):
     sum_rec[2] += recall_turning
     print(f'{recall_turning = }')
 
-    # Sitting Up Stats
-    precision_sitting = _calc_precision(3, conf)
-    sum_pre[3] += precision_sitting
-    print(f'{precision_sitting = }')
-    recall_sitting = _calc_recall(3, conf)
-    sum_rec[3] += recall_sitting
-    print(f'{recall_sitting = }')
+    
 
 
 
@@ -161,7 +155,7 @@ for train_index, test_index in cv.split(X):
 print("~~~~~~~~~~~~~~ AVERAGES ~~~~~~~~~~~~~~")
 average_accuracy = sum_acc / 10
 print(f'{average_accuracy = }')
-for i in range(4):
+for i in range(3):
     average_precision = sum_pre[i] / 10
     print(f'For {class_names[i]}: {average_precision = }')
     average_recall = sum_rec[i] / 10

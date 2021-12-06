@@ -95,7 +95,7 @@ def extract_features(window):
         magnitude.append(np.sqrt(row[0] ** 2 + row[1] ** 2 + row[2] ** 2))
 
 
-    # Catergory 1: Stat Features
+    # Category 1: Stat Features
     x.append(_compute_mean_features(window[:, 0]))
     feature_names.append("x_mean")
     
@@ -105,7 +105,7 @@ def extract_features(window):
     x.append(_compute_varaince_features(magnitude))
     feature_names.append("variance of magnitude")
     
-    # Catergory 2: FFT Features
+    # Category 2: FFT Features
     x.append(_compute_peak_rfft_features(magnitude))
     feature_names.append("max rfft mag")
 
@@ -118,14 +118,14 @@ def extract_features(window):
     x.append(_compute_peak_rfft_features(window[:, 2]))
     feature_names.append("max rfft z")
 
-    # Catergory 3: Other Features
+    # Category 3: Other Features
     x.append(_compute_entropy_features(window))
     feature_names.append("entropy of window")
 
     x.append(_compute_pitch_features(window))
     feature_names.append("pitch")
     
-    # Catergory 4: Peak Features
+    # Category 4: Peak Features
     x.append(_compute_peak_features(magnitude))
     feature_names.append("peaks on magnitude")
 
