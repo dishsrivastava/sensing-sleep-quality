@@ -26,7 +26,7 @@ from sklearn.metrics import confusion_matrix
 
 print("Loading data...")
 sys.stdout.flush()
-data_file = 'combined-data.csv'
+data_file = 'combined-data(upper combined).csv'
 data = np.genfromtxt(data_file, delimiter=',', skip_header=1)
 print("Loaded {} raw labelled activity data samples.".format(len(data)))
 sys.stdout.flush()
@@ -88,7 +88,7 @@ sys.stdout.flush()
 
 cv = KFold(n_splits=10, random_state=None, shuffle=True)
 
-tree = DecisionTreeClassifier(criterion="entropy", max_depth=3)
+tree = DecisionTreeClassifier(criterion="entropy", max_depth=6)
 
 def _calc_precision(label_index, conf):
     TP = conf[label_index][label_index]
