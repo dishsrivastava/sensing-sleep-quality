@@ -26,7 +26,7 @@ from sklearn.metrics import confusion_matrix
 
 print("Loading data...")
 sys.stdout.flush()
-data_file = 'my-activity-data.csv'
+data_file = 'combined-data.csv'
 data = np.genfromtxt(data_file, delimiter=',', skip_header=1)
 print("Loaded {} raw labelled activity data samples.".format(len(data)))
 sys.stdout.flush()
@@ -57,7 +57,7 @@ n_samples = 1000
 time_elapsed_seconds = (data[n_samples,0] - data[0,0]) / 1000
 sampling_rate = n_samples / time_elapsed_seconds
 
-class_names = ["legs moving", "sitting up", "posture change", "minimal movement"] #...
+class_names = ["legs moving", "minimal movement", "posture change", "sitting up" ] #...
 
 print("Extracting features and labels for window size {} and step size {}...".format(window_size, step_size))
 sys.stdout.flush()
@@ -129,14 +129,14 @@ for train_index, test_index in cv.split(X):
     sum_rec[0] += recall_legs
     print(f'{recall_legs = }')
 
-    # Sitting Up Stats
-    precision_sitting = _calc_precision(1, conf)
-    sum_pre[1] += precision_sitting
-    print(f'{precision_sitting = }')
-    recall_sitting = _calc_recall(1, conf)
-    sum_rec[1] += recall_sitting
-    print(f'{recall_sitting = }')
-
+    # Minimal Movement Stats
+    precision_little_movement = _calc_precision(1, conf)
+    sum_pre[1] += precision_little_movement
+    print(f'{precision_little_movement = }')
+    recall_little_movement = _calc_recall(1, conf)
+    sum_rec[1] += recall_little_movement
+    print(f'{recall_little_movement = }')
+    
     # Posture Change Stats
     precision_turning = _calc_precision(2, conf)
     sum_pre[2] += precision_turning
@@ -145,13 +145,15 @@ for train_index, test_index in cv.split(X):
     sum_rec[2] += recall_turning
     print(f'{recall_turning = }')
 
-    # Minimal Movement Stats
-    precision_little_movement = _calc_precision(3, conf)
-    sum_pre[3] += precision_little_movement
-    print(f'{precision_little_movement = }')
-    recall_little_movement = _calc_recall(3, conf)
-    sum_rec[3] += recall_little_movement
-    print(f'{recall_little_movement = }')
+    # Sitting Up Stats
+    precision_sitting = _calc_precision(3, conf)
+    sum_pre[3] += precision_sitting
+    print(f'{precision_sitting = }')
+    recall_sitting = _calc_recall(3, conf)
+    sum_rec[3] += recall_sitting
+    print(f'{recall_sitting = }')
+
+
 
     print("~~~~~~~~~~~~~~ END FOLD ~~~~~~~~~~~~~~")
     print("\n")
