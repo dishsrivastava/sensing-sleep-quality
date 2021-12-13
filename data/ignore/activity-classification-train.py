@@ -26,7 +26,7 @@ from sklearn.metrics import confusion_matrix
 
 print("Loading data...")
 sys.stdout.flush()
-data_file = 'combined-data(upper combined).csv'
+data_file = 'combined-data.csv'
 data = np.genfromtxt(data_file, delimiter=',', skip_header=1)
 print("Loaded {} raw labelled activity data samples.".format(len(data)))
 sys.stdout.flush()
@@ -57,7 +57,7 @@ n_samples = 1000
 time_elapsed_seconds = (data[n_samples,0] - data[0,0]) / 1000
 sampling_rate = n_samples / time_elapsed_seconds
 
-class_names = ["minimal movement", "legs moving", "posture change/sitting up"] #...
+class_names = ["minimal movement", "legs moving"] # "posture change/sitting up"] #...
 
 print("Extracting features and labels for window size {} and step size {}...".format(window_size, step_size))
 sys.stdout.flush()
@@ -88,7 +88,7 @@ sys.stdout.flush()
 
 cv = KFold(n_splits=10, random_state=None, shuffle=True)
 
-tree = DecisionTreeClassifier(criterion="entropy", max_depth=4)
+tree = DecisionTreeClassifier(criterion="entropy", max_depth=2)
 
 def _calc_precision(label_index, conf):
     TP = conf[label_index][label_index]
@@ -117,7 +117,8 @@ for train_index, test_index in cv.split(X):
     predicted_labels = tree.predict(test_data)
     conf = confusion_matrix(test_labels, predicted_labels)
     print(conf)
-    accuracy = (conf[0][0] + conf[1][1] + conf[2][2] + conf[3][3]) / np.sum(conf)
+    # accuracy = (conf[0][0] + conf[1][1] + conf[2][2] + conf[3][3]) / np.sum(conf)
+    accuracy = (conf[0][0] + conf[1][1]) / np.sum(conf)
     sum_acc += accuracy
     print(f'{accuracy = }')
 
@@ -137,13 +138,13 @@ for train_index, test_index in cv.split(X):
     sum_rec[1] += recall_legs
     print(f'{recall_legs = }')
 
-    # Posture Change Stats
-    precision_turning = _calc_precision(2, conf)
-    sum_pre[2] += precision_turning
-    print(f'{precision_turning = }')
-    recall_turning = _calc_recall(2, conf)
-    sum_rec[2] += recall_turning
-    print(f'{recall_turning = }')
+    # # Posture Change Stats
+    # precision_turning = _calc_precision(2, conf)
+    # sum_pre[2] += precision_turning
+    # print(f'{precision_turning = }')
+    # recall_turning = _calc_recall(2, conf)
+    # sum_rec[2] += recall_turning
+    # print(f'{recall_turning = }')
 
     # # Sitting Up Stats
     # precision_sitting = _calc_precision(3, conf)
@@ -161,7 +162,7 @@ for train_index, test_index in cv.split(X):
 print("~~~~~~~~~~~~~~ AVERAGES ~~~~~~~~~~~~~~")
 average_accuracy = sum_acc / 10
 print(f'{average_accuracy = }')
-for i in range(4):
+for i in range(2):
     average_precision = sum_pre[i] / 10
     print(f'For {class_names[i]}: {average_precision = }')
     average_recall = sum_rec[i] / 10
