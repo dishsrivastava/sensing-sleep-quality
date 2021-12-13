@@ -57,7 +57,7 @@ n_samples = 1000
 time_elapsed_seconds = (data[n_samples,0] - data[0,0]) / 1000
 sampling_rate = n_samples / time_elapsed_seconds
 
-class_names = ["legs moving", "minimal movement", "posture change", "sitting up" ] #...
+class_names = ["minimal movement", "legs moving", "posture change/sitting up"] #...
 
 print("Extracting features and labels for window size {} and step size {}...".format(window_size, step_size))
 sys.stdout.flush()
@@ -88,7 +88,7 @@ sys.stdout.flush()
 
 cv = KFold(n_splits=10, random_state=None, shuffle=True)
 
-tree = DecisionTreeClassifier(criterion="entropy", max_depth=6)
+tree = DecisionTreeClassifier(criterion="entropy", max_depth=4)
 
 def _calc_precision(label_index, conf):
     TP = conf[label_index][label_index]
@@ -121,22 +121,22 @@ for train_index, test_index in cv.split(X):
     sum_acc += accuracy
     print(f'{accuracy = }')
 
-    # Leg Movement Stats 
-    precision_legs = _calc_precision(0, conf)
-    sum_pre[0] += precision_legs
-    print(f'{precision_legs = }')
-    recall_legs = _calc_recall(0, conf)
-    sum_rec[0] += recall_legs
-    print(f'{recall_legs = }')
-
     # Minimal Movement Stats
-    precision_little_movement = _calc_precision(1, conf)
-    sum_pre[1] += precision_little_movement
+    precision_little_movement = _calc_precision(0, conf)
+    sum_pre[0] += precision_little_movement
     print(f'{precision_little_movement = }')
-    recall_little_movement = _calc_recall(1, conf)
-    sum_rec[1] += recall_little_movement
+    recall_little_movement = _calc_recall(0, conf)
+    sum_rec[0] += recall_little_movement
     print(f'{recall_little_movement = }')
     
+    # Leg Movement Stats 
+    precision_legs = _calc_precision(1, conf)
+    sum_pre[1] += precision_legs
+    print(f'{precision_legs = }')
+    recall_legs = _calc_recall(1, conf)
+    sum_rec[1] += recall_legs
+    print(f'{recall_legs = }')
+
     # Posture Change Stats
     precision_turning = _calc_precision(2, conf)
     sum_pre[2] += precision_turning
@@ -145,13 +145,13 @@ for train_index, test_index in cv.split(X):
     sum_rec[2] += recall_turning
     print(f'{recall_turning = }')
 
-    # Sitting Up Stats
-    precision_sitting = _calc_precision(3, conf)
-    sum_pre[3] += precision_sitting
-    print(f'{precision_sitting = }')
-    recall_sitting = _calc_recall(3, conf)
-    sum_rec[3] += recall_sitting
-    print(f'{recall_sitting = }')
+    # # Sitting Up Stats
+    # precision_sitting = _calc_precision(3, conf)
+    # sum_pre[3] += precision_sitting
+    # print(f'{precision_sitting = }')
+    # recall_sitting = _calc_recall(3, conf)
+    # sum_rec[3] += recall_sitting
+    # print(f'{recall_sitting = }')
 
 
 
@@ -171,5 +171,5 @@ tree.fit(X, Y)
 
 export_graphviz(tree, out_file='tree.dot', feature_names = feature_names)
 
-with open('classifier.pickle', 'wb') as f:
-    pickle.dump(tree, f)
+# with open('classifier.pickle', 'wb') as f:
+#     pickle.dump(tree, f)
