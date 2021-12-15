@@ -1,7 +1,7 @@
 import numpy as np
 import math
 def pull_data(dir_name, file_name):
-    f = open(dir_name + '/' + file_name + '.csv')
+    f = open(dir_name + '/' + file_name)
     xs = []
     ys = []
     zs = []
